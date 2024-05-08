@@ -25,38 +25,33 @@ fig.show()
 print(df["HeartRate"])
 
 # %%
+max_hr = int(input("Bitte geben Sie die maximale Herzfrequenz ein: "))
 
-# Angenommene maximale Herzfrequenz und Ruheherzfrequenz
-max_hr = 220 - age
-
-# Definition der Zonen
-def teile_in_herzfrequenz_zonen(herzfrequenz, max_hr):
-    zonen = {
-        "Zone 1": (0.5 * max_hr, 0.6 * max_hr),
-        "Zone 2": (0.6 * max_hr, 0.7 * max_hr),
-        "Zone 3": (0.7 * max_hr, 0.8 * max_hr),
-        "Zone 4": (0.8 * max_hr, 0.9 * max_hr),
-        "Zone 5": (0.9 * max_hr, max_hr)
+#Definition der 5 HR-Zonen
+zones = {
+    "Zone 1": (0.5 * max_hr, 0.6 * max_hr),
+    "Zone 2": (0.6 * max_hr, 0.7 * max_hr),
+    "Zone 3": (0.7 * max_hr, 0.8 * max_hr),
+    "Zone 4": (0.8 * max_hr, 0.9 * max_hr),
+    "Zone 5": (0.9 * max_hr, 1.0 * max_hr)
         }
-    
-    for zone, (min_hf, max_hf) in zonen.items():
-        if min_hf <= herzfrequenz < max_hf:
-            return zone
-    return "Außerhalb der Zonen"
 
-# Beispiel Herzfrequenzdaten
-df[""] = HeartRate
+# Aktivität in Zonen eingeteilt
+for zone, (lower, upper) in zones.items():
+    #df[zone] = (df["HeartRate"] > lower) & (df["HeartRate"] <= upper)
+    df[zone] = (df["HeartRate"].apply(lambda x: 1 if lower <= x <= upper else 0))
 
-# Einteilung der Herzfrequenz in Zonen
-heart_rate_zones = []
-for hr in heart_rates:
-    for zone, (lower, upper) in zones.items():
-        if lower <= hr <= upper:
-            heart_rate_zones.append((hr, zone))
-            break
 
-# Ausgabe der Herzfrequenzdaten mit zugehöriger Zone
-for hr, zone in heart_rate_zones:
-    print(f"Herzfrequenz: {hr}, Zone: {zone}")
+
+# %%
+#Zeit in jeder Zone berechnen (in Minuten)
+time_in_zones = {}
+for zone in zones:
+    time_in_zone = df[zone].sum() * df["Duration"].mean() / 60  # in Minuten
+    time_in_zones[zone] = round(time_in_zone, 2)
+
+#Ergbnisse anzeigen
+for zone, time in time_in_zones.items():
+    print(f"{zone}: {time} Minuten")
 
 # %%
