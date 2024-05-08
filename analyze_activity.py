@@ -13,3 +13,12 @@ df["PowerOriginal"].mean()
 df["PowerOriginal"].max()
 
 # %%
+#Leistung über die Zeit in Plot, welcher Leistung und Herzfrequenz über die Zeit anzeigt
+import plotly.express as px
+
+df["Time_in_Seconds"] = df.index
+fig = px.line(df, x= "Time_in_Seconds", y= "PowerOriginal")
+fig.show()
+
+
+# %%
