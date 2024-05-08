@@ -55,3 +55,13 @@ for zone, time in time_in_zones.items():
     print(f"{zone}: {time} Minuten")
 
 # %%
+# Durchschnittliche Leistung in jeder Zone berechnen
+avg_power_in_zones = {}
+for zone in zones:
+    avg_power_in_zone = df[df[zone] == 1]["PowerOriginal"].mean()
+    avg_power_in_zones[zone] = round(avg_power_in_zone, 2)
+
+# Ergebnisse anzeigen
+print("Durchschnittliche Leistung in jeder Zone:")
+for zone, avg_power in avg_power_in_zones.items():
+    print(f"{zone}: {avg_power} Watt")
